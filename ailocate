@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Data::Dumper;
+
+my $category = shift @ARGV;
+die "No category given" unless $category;
+
+my @lines = grep { $_ !~ /DataFrame/ // $_ =~ /;/ } map { chomp; $_ } qx(cat ~/.ailocate_index);
+@lines = do { my %seen; grep { !$seen{$_}++ } @lines };
+
+for my $l (@lines) {
+	if($l =~ m#(.*);(.*)#) {
+		my ($path, $category_string) = ($1, $2);
+
+		my @categories = split /:/, $category_string;
+
+		for my $this_category (@categories) {
+			if($this_category =~ m#$category#) {
+				print "$path -> $this_category\n";
+			}
+		}
+	} else {
+		#warn "Invalid line $l";
+	}
+}
