@@ -6,7 +6,7 @@ echo "Creating index"
 
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
-for item in $(locate jpg; locate JPG; locate png; locate PNG; locate jpeg; locate JPEG; locate gif; locate GIF); do
+for item in $(locate $HOME | egrep -i "\.\(jpe?g|gif|png)$" | grep -v '/\.' ); do
 	echo "Indexing $item"
 	echo ""
 
